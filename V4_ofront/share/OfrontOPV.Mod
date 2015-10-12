@@ -90,7 +90,7 @@ MODULE OfrontOPV;	(* J. Templ 16.2.95 / 3.7.96
 	VAR
 		assert, inxchk, mainprog, ansi: BOOLEAN;
 		stamp: INTEGER;	(* unique number for nested objects *)
-		recno: INTEGER;	(* number of anonymous record types *)
+		recno: LONGINT;	(* number of anonymous record types *)
 
 		exit: ExitInfo;	(* to check if EXIT is simply a break *)
 		nofExitLabels: INTEGER;
@@ -131,8 +131,7 @@ MODULE OfrontOPV;	(* J. Templ 16.2.95 / 3.7.96
 				IF offset = 0 THEN offset := 1 END ;	(* 1 byte filler to avoid empty struct *)
 				IF OPM.RecSize = 0 THEN base := NaturalAlignment(offset, OPM.RecAlign) END ;
 				OPC.Align(offset, base);
-(*				IF (typ^.strobj = NIL) & (typ^.align MOD 10000H = 0) THEN INC(recno); INC(base, recno * 10000H) END ;*)
-				IF (typ^.strobj = NIL) & (typ^.align MOD 10000H = 0) THEN INC(recno); (*INC(base, recno * 10000H)*) END ; 
+				IF (typ^.strobj = NIL) & (typ^.align MOD 10000H = 0) THEN INC(recno); INC(base, recno * 10000H) END ;
 				typ^.size := offset; typ^.align := base;
 				(* encode the trailing gap into the symbol table to allow dense packing of extended records *)
 				typ^.sysflag := typ^.sysflag MOD 100H + SHORT((offset - off0)*100H)	
