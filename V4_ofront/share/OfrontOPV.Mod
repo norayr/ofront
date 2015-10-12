@@ -132,6 +132,7 @@ MODULE OfrontOPV;	(* J. Templ 16.2.95 / 3.7.96
 				IF OPM.RecSize = 0 THEN base := NaturalAlignment(offset, OPM.RecAlign) END ;
 				OPC.Align(offset, base);
 				IF (typ^.strobj = NIL) & (typ^.align MOD 10000H = 0) THEN INC(recno); INC(base, recno * 10000H) END ;
+(*				IF (typ^.strobj = NIL) & (typ^.align MOD 10000H = 0) THEN INC(recno); (*INC(base, recno * 10000H)*) END ; *)
 				typ^.size := offset; typ^.align := base;
 				(* encode the trailing gap into the symbol table to allow dense packing of extended records *)
 				typ^.sysflag := typ^.sysflag MOD 100H + SHORT((offset - off0)*100H)	

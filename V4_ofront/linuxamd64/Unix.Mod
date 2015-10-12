@@ -227,7 +227,7 @@ TYPE
 
   Sockaddr* = RECORD
     family0*, family1*: SHORTINT;
-    pad0 pad1: SHORTINT;
+    pad0, pad1: SHORTINT;
     pad2 : INTEGER;
     pad*: ARRAY 14 OF CHAR;
   END ;
@@ -263,7 +263,7 @@ TYPE
    PROCEDURE -includeSelect()
      "#include <sys/select.h>";
 
-  PROCEDURE -err(): INTEGER;
+  PROCEDURE -err(): INTEGER
     "errno";
 
   PROCEDURE errno*(): INTEGER;
@@ -420,7 +420,7 @@ TYPE
   PROCEDURE -Accept*(socket: INTEGER; VAR addr: Sockaddr; VAR addrlen: INTEGER): LONGINT
     "accept(socket, addr, addrlen)";
 
-  PROCEDURE -Recv*(socket: INTEGER; bufadr, buflen: LONGINT flags: INTEGER): LONGINT
+  PROCEDURE -Recv*(socket: INTEGER; bufadr, buflen: LONGINT; flags: INTEGER): LONGINT
     "recv(socket, bufadr, buflen, flags)";
 
   PROCEDURE -Send*(socket: INTEGER; bufadr, buflen: LONGINT; flags: INTEGER): LONGINT
