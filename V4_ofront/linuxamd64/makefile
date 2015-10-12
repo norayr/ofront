@@ -39,10 +39,11 @@ clean:
 cmds:   ofcmds cccmds lnkcmds
 
 ofcmds:
-	$(OFRONT) SYSTEM.Mod -iapx Args.Mod Console.Mod ../share/Modules.Mod Unix.Mod Kernel.Mod Files.Mod -x \
-		Reals.Mod CmdlnTexts.Mod OfrontOPM.cmdln.Mod OfrontOPS.Mod -x OfrontOPT.Mod\
-		OfrontOPC.Mod OfrontOPV.Mod OfrontOPB.Mod OfrontOPP.Mod \
-		OfrontCmd.Mod -m BrowserCmd.Mod -m OCatCmd.Mod -m
+	ofront -s SYSTEM.Mod -iapx Args.Mod Console.Mod ../share/Modules.Mod Unix.Mod Kernel.Mod Files.Mod -x Reals.Mod CmdlnTexts.Mod OfrontOPM.cmdln.Mod OfrontOPS.Mod -x OfrontOPT.Mod OfrontOPC.Mod OfrontOPV.Mod OfrontOPB.Mod OfrontOPP.Mod OfrontCmd.Mod -m BrowserCmd.Mod -m OCatCmd.Mod -m
+	#$(OFRONT) SYSTEM.Mod -iapx Args.Mod Console.Mod ../share/Modules.Mod Unix.Mod Kernel.Mod Files.Mod -x \
+	#	Reals.Mod CmdlnTexts.Mod OfrontOPM.cmdln.Mod OfrontOPS.Mod -x OfrontOPT.Mod\
+	#	OfrontOPC.Mod OfrontOPV.Mod OfrontOPB.Mod OfrontOPP.Mod \
+	#	OfrontCmd.Mod -m BrowserCmd.Mod -m OCatCmd.Mod -m
 
 cccmds:
 	$(CC) \

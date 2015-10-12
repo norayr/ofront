@@ -40,8 +40,12 @@ MODULE Kernel;
     timeStart: LONGINT; (* milliseconds *)
 
 
-  PROCEDURE -include()
-    "#include <setjmp.h>";
+  PROCEDURE -includesetjmp()
+    '#include "setjmp.h"';
+
+(* for localtime *)
+  PROCEDURE -includetime()
+    '#include "time.h"';
 
   PROCEDURE -Lock*()
     "SYSTEM_lock++";
