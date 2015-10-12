@@ -14,7 +14,7 @@ TARFILE = /tmp/$(RELEASENAME)_$(VERSION).tar
 SETPATH = OBERON=.:../share
 OFRONT = $(SETPATH) ofront -s
 
-CC = cc $(CCOPT) -c
+CC = cc $(CCOPT) -c -fPIC
 CL = cc $(CCOPT)
 LD = cc -shared -o $(LIBRARY)
 
