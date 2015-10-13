@@ -88,48 +88,26 @@ MODULE Fonts; (*JG 27.8.90/RC 9.7.91*)
     END;
     IF F = NIL THEN
       Convert (name, fileName);
-	  Console.String("name = "); Console.String(name); Console.Ln;
-	  Console.String("fileName = "); Console.String(fileName); Console.Ln;
       f := Files.Old(fileName);
-	  Console.String("opening font file"); Console.Ln;
       IF f # NIL THEN
-	     Console.String("opened"); Console.Ln;
         Files.Set(R, f, 0); 
 		Files.Read(R, ch);
-		 Console.String("read ch = "); Console.Char(ch); Console.Ln;
         IF ch = FontFileId THEN
-		    Console.String("ch is fontfield, ch = "); Console.Char(ch); Console.Ln;
           Files.Read(R, ch); (*abstraction*)
-		    Console.String("abstraction, ch = "); Console.Char(ch); Console.Ln;
           Files.Read(R, ch); (*family*)
-		    Console.String("family, ch = "); Console.Char(ch); Console.Ln;
           Files.Read(R, ch); (*variant*)
-		    Console.String("variant, ch = "); Console.Char(ch); Console.Ln;
           NEW(F);
           Files.ReadInt(R, F.height);
-		    Console.String("F.height = "); Console.Int(F.height, 0); Console.Ln;
           Files.ReadInt(R, F.minX); Files.ReadInt(R, F.maxX);
-		    Console.String("F.minX = "); Console.Int(F.minX, 0); Console.Ln;
-            Console.String("F.maxX = "); Console.Int(F.maxX, 0); Console.Ln;
-		    Console.String("readint minx,maxx"); Console.Ln;
           Files.ReadInt(R, F.minY); Files.ReadInt(R, F.maxY);
-		    Console.String("F.minY = "); Console.Int(F.minY, 0); Console.Ln;
-		    Console.String("F.maxY = "); Console.Int(F.maxY, 0); Console.Ln;
-		    Console.String("readint miny, maxy"); Console.Ln;
           Files.ReadInt(R, NofRuns);
-		    Console.String("nofruns = "); Console.Int(NofRuns, 0); Console.Ln;
           NofBoxes := 0; k := 0;
           WHILE k # NofRuns DO
             Files.ReadInt(R, run[k].beg); Files.ReadInt(R, run[k].end);
-			   Console.String("run["); Console.Int(k,0); Console.String("].beg = "); Console.Int(run[k].beg, 0); Console.Ln;
-			   Console.String("run["); Console.Int(k,0); Console.String("].end = "); Console.Int(run[k].end, 0); Console.Ln;
             NofBoxes := NofBoxes + run[k].end - run[k].beg;
-		       Console.String("NofBoxes = "); Console.Int(NofBoxes, 0); Console.Ln;
             INC(k)
           END;
-		       Console.String("out of while loop"); Console.Ln;
           pixmapW := 0; l := 0;
-		       Console.String("entering l#nofboxes loop"); Console.Ln;
           WHILE l # NofBoxes DO
             Files.ReadInt(R, box[l].dx);
             Files.ReadInt(R, box[l].x); Files.ReadInt(R, box[l].y);
@@ -137,19 +115,13 @@ MODULE Fonts; (*JG 27.8.90/RC 9.7.91*)
             pixmapW := pixmapW + (box[l].w + 7) DIV 8;
             INC(l)
           END;
-		        Console.String("out of this loop too"); Console.Ln;
 		  IF F.minY > F.maxY THEN F.minY := 0  END; (* temporarily, noch *)
           pixmapH := F.maxY - F.minY;
           NEW(raster); F.raster := SYSTEM.VAL(Display.Font, raster);
-		     Console.String("system.new will be executed"); Console.Ln;
-			 Console.String("pixmapW = "); Console.Int(pixmapW, 0); Console.Ln;
-			 Console.String("pixmapH = "); Console.Int(pixmapH, 0); Console.Ln;
           SYSTEM.NEW(rb, pixmapW*pixmapH);  (* temporary *)
-		     Console.String("still alive"); Console.Ln;
           RasterBase := SYSTEM.VAL(LONGINT, rb);
           pixmapX := 0;
           k := 0; l := 0; m := 0;
-		     Console.String("reached k < nofruns loop"); Console.Ln;
           WHILE k < NofRuns DO
             WHILE m < run[k].beg DO DummyCh(m); INC(m) END;
             WHILE m < run[k].end DO
@@ -174,9 +146,7 @@ MODULE Fonts; (*JG 27.8.90/RC 9.7.91*)
             END;
             INC(k)
           END;
-		     Console.String("out! entering m < 256 loop"); Console.Ln;
           WHILE m < 256 DO DummyCh(m); INC(m) END;
-		     Console.String("done!"); Console.Ln;
           pixmap := X11.RasterToPixmap(RasterBase, 8*pixmapW, pixmapH);
           m := 0;
           WHILE m < 256 DO raster.metrics[m].p.pixmap := pixmap; INC(m) END ;
