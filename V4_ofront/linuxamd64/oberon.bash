@@ -7,4 +7,5 @@ fi
 export OBERON=.:$OFRONT_HOME/V4_ofront:$OFRONT_HOME/V4:$OFRONT_HOME/fonts
 export LD_LIBRARY_PATH=$OFRONT_HOME/lib
 
-$OFRONT_HOME/bin/oberon $* &
+#$OFRONT_HOME/bin/oberon $* &
+$OFRONT_HOME/bin/oberon
