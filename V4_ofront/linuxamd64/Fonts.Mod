@@ -29,13 +29,13 @@ MODULE Fonts; (*JG 27.8.90/RC 9.7.91*)
     VAR
       F: Font; raster: X11.Font;
       f: Files.File; R: Files.Rider;
-      pixmap, pixmapX, pixmapDX, pixmapW, pixmapH, RasterBase, b, n, a: LONGINT;
+      pixmap: LONGINT; pixmapX, pixmapDX, pixmapW, pixmapH: INTEGER; RasterBase, b, n, a: LONGINT;
       NofRuns, NofBoxes: INTEGER;
       k, l, m, w, h: INTEGER;
       ch: CHAR;
       run: ARRAY 16 OF RunRec;
       box: ARRAY 256 OF BoxRec;
-      list, count: LONGINT;
+      list: LONGINT; count: INTEGER;
       fileName: ARRAY 64 OF CHAR;
       rb: SYSTEM.PTR;
 

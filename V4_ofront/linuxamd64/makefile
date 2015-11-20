@@ -68,7 +68,7 @@ lib:    oflib  cclib   lnklib
 
 oflib:
 	$(OFRONT) \
-		Modules.Mod X11.Mod Display.Mod  \
+		Modules.Mod ulmTypes.Mod X11.Mod Display.Mod  \
 		Input.Mod Math.Mod MathL.Mod Fonts.Mod Viewers.Mod \
 		Texts.Mod Oberon.Mod MenuViewers.Mod TextFrames.Mod \
 		In.Mod Out.Mod Printer.Mod TextPrinter.Mod ParcElems.Mod \
@@ -85,7 +85,7 @@ oflib:
 
 cclib:
 	$(CC) \
-		Modules.c X11.c Display.c \
+		Modules.c ulmTypes.c X11.c Display.c \
 		Input.c Math.c MathL.c Fonts.c Viewers.c \
 		Texts.c Oberon.c MenuViewers.c TextFrames.c \
 		In.c Out.c Printer.c TextPrinter.c ParcElems.c System.c  \
@@ -101,7 +101,7 @@ cclib:
 lnklib:
 	$(LD) \
 		SYSTEM.o Args.o Console.o Modules.o \
-		Unix.o Kernel.o Files.o X11.o Display.o\
+		Unix.o Kernel.o Files.o ulmTypes.o X11.o Display.o\
 		Input.o Math.o MathL.o Fonts.o Viewers.o Reals.o\
 		Texts.o CmdlnTexts.o Oberon.o MenuViewers.o TextFrames.o \
 		In.o Out.o Printer.o TextPrinter.o ParcElems.o System.o\

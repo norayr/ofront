@@ -1,7 +1,7 @@
 MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
 (* Oberon interface to X Window System Version 11 *)
 
-  IMPORT S := SYSTEM, Kernel, Console, Args;
+  IMPORT S := SYSTEM, Kernel, Console, Args, ulmTypes;
   
   CONST
     WinNameStr = "ETH-Oberon (TM)";
@@ -24,7 +24,7 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
     Pattern* = LONGINT (* = PatternPtr *);
     PatternPtr* = POINTER TO PatternDesc;
     PatternDesc* = RECORD
-      x*, y*: LONGINT;
+      x*, y*: INTEGER;
       w*, h*: INTEGER;
       pixmap*: Pixmap
     END ;
@@ -66,14 +66,13 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
       redmask*, greenmask*, bluemask*: INTEGER;
       colomapsize*, bitsperrgb*: INTEGER
     END ;
-	INT16 = ARRAY 2 OF CHAR; (* made for red, green, blue from the next record; -- noch *)
     Color* = RECORD
       pixel*: LONGINT;
-      red*, green*, blue*: INT16;
+      red*, green*, blue*: ulmTypes.Int16;
       flags*, pad*: CHAR
     END ; (* xColor from Xlib.h *)
-    Point* = RECORD x*, y*: INT16 END ; (* probably typedef struct _xPoint; or XPoint from Xlib.h; same size anyway; -- noch *)
-    Rectangle* = RECORD x*, y*, w*, h*: INT16 END ; (*probably typedef struct _xRectangle; -- noch *)
+    Point* = RECORD x*, y*: ulmTypes.Int16 END ; (* probably typedef struct _xPoint; or XPoint from Xlib.h; same size anyway; -- noch *)
+    Rectangle* = RECORD x*, y*, w*, h*: ulmTypes.Int16 END ; (*probably typedef struct _xRectangle; -- noch *)
     Cursor* = LONGINT;
     KeySym* = LONGINT;
     KeyCode* = LONGINT;
@@ -256,13 +255,13 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
     primary*, secondary*, root*: Window;
     basePixel*, foreground*, background*: LONGINT;
     backgroundCol*, foregroundCol*: INTEGER;
-    screen*, screenw*, screenh*, screenhmm*: LONGINT;
+    screen*, screenw*, screenh*, screenhmm*: INTEGER;
     cells*, planes*: LONGINT;
     visualptr*, defvisualptr*: LONGINT;
     cmap*, defcmap*: Colormap;
     Width*, Height*, Bottom*, UBottom*, ColLeft*, depth*: INTEGER;
     pixelValues*: ARRAY 256 OF LONGINT;
-    function*: ARRAY 3 OF LONGINT;
+    function*: ARRAY 3 OF INTEGER;
     planesMask*: LONGINT;
     colorClass*: SHORTINT; (* monochrome, grayscale or color *)
     nofcol*: LONGINT;
@@ -298,7 +297,7 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
   PROCEDURE -OpenDisplay*(name: ARRAY OF CHAR): LONGINT
       "(long)XOpenDisplay(name)";
 
-  PROCEDURE -DefaultScreen*(display: Display): LONGINT
+  PROCEDURE -DefaultScreen*(display: Display): INTEGER
       "(long)XDefaultScreen(display)";
 
   PROCEDURE -DisplayWidth*(display: Display; screen: INTEGER): INTEGER
@@ -339,7 +338,7 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
       "(long)XCreateSimpleWindow(display, parent, x, y, width, height, borderWidth, border, background)";
 
   PROCEDURE -TranslateCoordinates*(display: Display; sw, dw: Window; srcx, srcy: INTEGER;
-                              VAR dstx, dsty: LONGINT; VAR child: Window)
+                              VAR dstx, dsty: INTEGER; VAR child: Window)
       "XTranslateCoordinates(display, sw, dw, srcx, srcy, dstx, dsty, child)";
 
   PROCEDURE -MoveResizeWindow*(display: Display; window: Window; x, y, width, height: INTEGER)
@@ -355,7 +354,7 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
       "XSetCommand(display, window, argv, argc)";
 
   PROCEDURE -Geometry*(display: Display; screen: INTEGER; user, default: ARRAY OF CHAR;
-                      bwidth, fw, fh, xpad, ypad: INTEGER; VAR x, y, w, h: LONGINT): INTEGER
+                      bwidth, fw, fh, xpad, ypad: INTEGER; VAR x, y, w, h: INTEGER): INTEGER
       "(long)XGeometry(display, screen, user, default, bwidth, fw, fh, xpad, ypad, x, y, w, h)";
 
   PROCEDURE -MapRaised*(display: Display; window: Window)(*: INTEGER*)
@@ -470,7 +469,7 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
   PROCEDURE -SetClipRectangles*(display: Display; gc: GC; clipxorigin, clipyorigin: INTEGER; rectangles: LONGINT; n, ordering: INTEGER)
       "XSetClipRectangles(display, gc, clipxorigin, clipyorigin, rectangles, n, ordering)";
 
-  PROCEDURE -ListFonts*(display: Display; pattern: LONGINT; maxnames: INTEGER; VAR count: LONGINT): LONGINT
+  PROCEDURE -ListFonts*(display: Display; pattern: LONGINT; maxnames: INTEGER; VAR count: INTEGER): LONGINT
       "(long)XListFonts(display, pattern, maxnames, count)";
 
   PROCEDURE -FreeFontNames*(list: LONGINT)
@@ -497,7 +496,7 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
       "(long)XLookupString(event, buffer, bufsize, keysym, compstatus)";
 
   PROCEDURE -QueryPointer*(display: Display; window: Window; VAR rw, cw: Window;
-                        VAR xr, yr, xw, yw, keysButtons: LONGINT)
+                        VAR xr, yr, xw, yw, keysButtons: INTEGER)
       "XQueryPointer(display, window, rw, cw, xr, yr, xw, yw, keysButtons)";
 
   PROCEDURE -RefreshKeyboardMapping*(event: LONGINT)
@@ -526,7 +525,7 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
       "XSetWindowColormap(display, window, cmap)";
 
   PROCEDURE -QueryBestSize*(display: Display; class: INTEGER; screen: Drawable;
-                        width, height: INTEGER; VAR w, h: LONGINT)
+                        width, height: INTEGER; VAR w, h: INTEGER)
       "XQueryBestSize(display, class, screen, width, height, w, h)";
 
   PROCEDURE -CreatePixmap*(display: Display; drawable: Drawable; width, height, depth: INTEGER): Pixmap
@@ -554,31 +553,31 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
       "(long)XGetSubImage(display, drawable, x, y, width, height, planeMask, format, dstImage, dstX, dstY)";
 
   PROCEDURE -PutImage*(display: Display; drawable: Drawable; gc: GC; image: Image; 
-                      srcX, srcY, dstX, dstY, width, height: LONGINT)
+                      srcX, srcY, dstX, dstY, width, height: INTEGER)
       "XPutImage(display, drawable, gc, image, srcX, srcY, dstX, dstY, width, height)";
-
-  PROCEDURE -PutPixel*(image: Image; x, y, pixel: LONGINT): LONGINT
+   (* Xutil.h again *)
+  PROCEDURE -PutPixel*(image: Image; x, y: INTEGER; pixel: LONGINT): INTEGER
       "(long)XPutPixel(image, x, y, pixel)";
 
-  PROCEDURE -GetPixel*(image: Image; x, y: LONGINT): LONGINT
+  PROCEDURE -GetPixel*(image: Image; x, y: INTEGER): LONGINT
       "(long)XGetPixel(image, x, y)";
 
   PROCEDURE -AddPixel*(image: Image; value: LONGINT)
       "XAddPixel(image, value)";
-
+   (* Xlib.h again *)
   PROCEDURE -Free*(data: LONGINT)
       "XFree(data)";
 
   PROCEDURE -SetErrorHandler*(handler: ErrorHandler)
       "XSetErrorHandler(handler)";
 
-  PROCEDURE -GetErrorText*(display: Display; code, buffer, length: LONGINT)
+  PROCEDURE -GetErrorText*(display: Display; code: INTEGER; buffer: LONGINT; length: INTEGER)
       "XGetErrorText(display, code, buffer, length)";
 
-  PROCEDURE -StoreBytes*(display: Display; bytes, nbytes: LONGINT)
+  PROCEDURE -StoreBytes*(display: Display; bytes: LONGINT; nbytes: INTEGER)
       "XStoreBytes(display, bytes, nbytes)";
 
-  PROCEDURE -FetchBytes*(display: Display; VAR nbytes: LONGINT): LONGINT
+  PROCEDURE -FetchBytes*(display: Display; VAR nbytes: INTEGER): LONGINT
       "(long)XFetchBytes(display, nbytes)";
 
   PROCEDURE -SetSelectionOwner*(display: Display; selection: Atom; owner: Window; time: Time)
@@ -598,36 +597,37 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
       "XConvertSelection(display, selection, target, property, requestor, timestamp)";
 
   PROCEDURE -ChangeProperty*(display: Display; window: Window; property, type: Atom; 
-                          format, mode, data, nelements: LONGINT)
+                          format, mode: INTEGER; data: LONGINT; nelements: INTEGER)
       "XChangeProperty(display, window, property, type, format, mode, data, nelements)";
 
   PROCEDURE -GetWindowProperty*(display: Display; window: Window; property: Atom; offset, length: LONGINT;
-                  delete: Bool; reqtype: Atom; VAR type: Atom; VAR format, nitems, bytesafter, prop: LONGINT)
+                  delete: Bool; reqtype: Atom; VAR type: Atom; VAR format: INTEGER; VAR nitems, bytesafter, prop: LONGINT)
       "XGetWindowProperty(display, window, property, offset, length, delete, reqtype, type, format, nitems, bytesafter, prop)";
 
   PROCEDURE -DeleteProperty*(display: Display; window: Window; property: Atom)
       "XDeleteProperty(display, window, property)";
 
-  PROCEDURE -WarpPointer*(display: Display; srcwin, dstwin: Window; srcx, srcy, srcw, srch, dstx, dsty: LONGINT)
+  PROCEDURE -WarpPointer*(display: Display; srcwin, dstwin: Window; srcx, srcy, srcw, srch, dstx, dsty: INTEGER)
       "XWarpPointer(display, srcwin, dstwin, srcx, srcy, srcw, srch, dstx, dsty)";
 
   PROCEDURE -InstallColormap*(display: Display; cmap: Colormap)
       "XInstallColormap(display, cmap)";
 
   PROCEDURE -GetGeometry*(display: Display; drawable: Drawable;
-                        VAR root, x, y, width, height, orderWidth, Depth: LONGINT)
+                        VAR root: Window; x, y, width, height, orderWidth, Depth: INTEGER)
       "XGetGeometry(display, drawable, root, x, y, width, height, orderWidth, Depth)";
 
-  PROCEDURE -ResizeWindow*(display: Display; window: Window; x, y: LONGINT)
+  PROCEDURE -ResizeWindow*(display: Display; window: Window; x, y: INTEGER)
       "XResizeWindow(display, window, x, y)";
 
   PROCEDURE -SetIOErrorHandler*(handler: IOErrorHandler)
       "XSetIOErrorHandler(handler)";
 
-
   PROCEDURE NewPattern*(VAR image: ARRAY OF SET; class: LONGINT; width, height: INTEGER): Pattern;
-    VAR pixmap: Pixmap; pat: PatternPtr; w, h, i, j, b, dest, srcw, destb, srci, desti: LONGINT;
-      data: ARRAY 256*32 OF CHAR; (* 256*256 bits *)
+    VAR pixmap: Pixmap; pat: PatternPtr; 
+	w, h: INTEGER; 
+	i, j, b, dest, srcw, destb, srci, desti: LONGINT;
+    data: ARRAY 256*32 OF CHAR; (* 256*256 bits *)
   BEGIN i := 0;
     Console.String("***DBG*** X11.Mod *** PROCEDURE NewPattern*"); Console.Ln;
     WHILE i < LEN(data) DO data[i] := 0X; INC(i) END ;
@@ -675,7 +675,7 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
     RETURN S.VAL(LONGINT, pat)
   END NewPattern;
 
-  PROCEDURE RasterToPixmap*(base, width, height: LONGINT): LONGINT;
+  PROCEDURE RasterToPixmap*(base: LONGINT; width, height: INTEGER): LONGINT;
     VAR pixmap: Pixmap;
   BEGIN
     Console.String("***DBG*** X11.Mod *** PROCEDURE RasterToPixmap*"); Console.Ln;
@@ -707,7 +707,8 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
     RGB[col+1].r := red; RGB[col+1].g := green; RGB[col+1].b := blue;
     IF (colorClass # monochrome) & (col >= 0) THEN
 	  Console.String("***DBG*** X11.Mod *** (colorClass # monochrome) & (col >= 0)"); Console.Ln;
-      xcol.red := 256*red; xcol.green := 256*green; xcol.blue := 256*blue;
+      (*xcol.red := 256*red; xcol.green := 256*green; xcol.blue := 256*blue;*)
+      ulmTypes.ToInt16(256*red, xcol.red); ulmTypes.ToInt16(256*green, xcol.green); ulmTypes.ToInt16(256*blue, xcol.blue);
       xcol.flags := CHR(DoAll);
       xcol.pixel := pixelValues[col];
       IF col < nofcol THEN
@@ -717,12 +718,18 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
       END ;
       IF ((col = BackgroundCol) OR (col = ForegroundCol)) & (arrow # 0) THEN
 	    Console.String("***DBG*** X11.Mod *** ((col = BackgroundCol) OR (col = ForegroundCol)) & (arrow # 0)"); Console.Ln;
-        cfore.red := 256*RGB[ForegroundCol+1].r;
-        cfore.green := 256*RGB[ForegroundCol+1].g;
-        cfore.blue := 256*RGB[ForegroundCol+1].b;
-        cback.red := 256*RGB[BackgroundCol+1].r;
-        cback.green := 256*RGB[BackgroundCol+1].g;
-        cback.blue := 256*RGB[BackgroundCol+1].b;
+        (*cfore.red := 256*RGB[ForegroundCol+1].r;*)
+        ulmTypes.ToInt16(256*RGB[ForegroundCol+1].r, cfore.red);
+        (*cfore.green := 256*RGB[ForegroundCol+1].g;*)
+        ulmTypes.ToInt16(256*RGB[ForegroundCol+1].g, cfore.green);
+        (*cfore.blue := 256*RGB[ForegroundCol+1].b;*)
+        ulmTypes.ToInt16(256*RGB[ForegroundCol+1].b, cfore.blue);
+        (*cback.red := 256*RGB[BackgroundCol+1].r;*)
+        ulmTypes.ToInt16(256*RGB[BackgroundCol+1].r, cback.red);
+        (*cback.green := 256*RGB[BackgroundCol+1].g;*)
+        ulmTypes.ToInt16(256*RGB[BackgroundCol+1].g, cback.green);
+        (*cback.blue := 256*RGB[BackgroundCol+1].b;*)
+        ulmTypes.ToInt16(256*RGB[BackgroundCol+1].b, cback.blue);
         RecolorCursor(display, arrow, S.ADR(cfore), S.ADR(cback))
       END
     END ;
@@ -755,7 +762,7 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
 	END ;
     IF lcf # lastfont THEN 
 	   Console.String("***DBG*** X11.Mod *** lcf # lastfont; SetFont(display"); Console.Ln;
-	   SetFont(display, gc, lcf.xid); lastfont := lcf  
+	   SetFont(display, gc, SHORT(lcf.xid)); lastfont := lcf  
 	END ;
     IF lcy0 >= 0 THEN window := primary ELSE window := secondary; DEC(lcy0, UBottom) END ;
 	Console.String("***DBG*** X11.Mod *** DrawString(display, window, gc, l..."); Console.Ln;
@@ -793,8 +800,8 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
 	Console.String("***DBG*** X11.Mod *** END DoFlush;"); Console.Ln;
   END DoFlush;
 
-  PROCEDURE Rebind*(keyString: ARRAY OF CHAR; VAR modifierStrings: Modlist; nofmod: LONGINT;
-                  to: ARRAY OF CHAR; nofchar: LONGINT);
+  PROCEDURE Rebind*(keyString: ARRAY OF CHAR; VAR modifierStrings: Modlist; nofmod: INTEGER;
+                  to: ARRAY OF CHAR; nofchar: INTEGER);
     VAR modlist: ARRAY 8 OF LONGINT; i: LONGINT;
   BEGIN i := 0;
     Console.String("***DBG*** X11.Mod *** PROCEDURE Rebind*"); Console.Ln;
@@ -824,7 +831,8 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
 
   PROCEDURE OpenDisp;
     VAR child: Window; flagmask, fd: LONGINT; event: Event;
-      gRoot, gX, gY, gW, gH, gBW, gD, offset: LONGINT;
+      gRoot: LONGINT; gX, gY, gW, gH, gBW, gD: INTEGER;
+      offset: LONGINT;
       defgeo: ARRAY 64 OF CHAR; i: INTEGER;
       displayArg, geometryArg: ARRAY 256 OF CHAR;
       coption: BOOLEAN;
@@ -1086,8 +1094,18 @@ MODULE X11;  (* RC 12.10.92, JT 13.12.94 *)
     VAR cfore, cback: Color; csource, cmask: PatternPtr;
   BEGIN
     Console.String("***DBG*** X11.Mod ***  PROCEDURE InitCursors;"); Console.Ln;
-    cfore.red := 256*RGB[ForegroundCol+1].r; cfore.green := 256*RGB[ForegroundCol+1].g; cfore.blue := 256*RGB[ForegroundCol+1].b;
-    cback.red := 256*RGB[BackgroundCol+1].r; cback.green := 256*RGB[BackgroundCol+1].g; cback.blue := 256*RGB[BackgroundCol+1].b;
+    (*cfore.red := 256*RGB[ForegroundCol+1].r;*)
+    ulmTypes.ToInt16(256*RGB[ForegroundCol+1].r, cfore.red);
+    (*cfore.green := 256*RGB[ForegroundCol+1].g;*)
+    ulmTypes.ToInt16(256*RGB[ForegroundCol+1].g, cfore.green);
+    (*cfore.blue := 256*RGB[ForegroundCol+1].b;*)
+    ulmTypes.ToInt16(256*RGB[ForegroundCol+1].b, cfore.blue);
+    (*cback.red := 256*RGB[BackgroundCol+1].r;*)
+    ulmTypes.ToInt16(256*RGB[BackgroundCol+1].r, cback.red);
+    (*cback.green := 256*RGB[BackgroundCol+1].g;*)
+    ulmTypes.ToInt16(256*RGB[BackgroundCol+1].g, cback.green);
+    (*cback.blue := 256*RGB[BackgroundCol+1].b;*)
+    ulmTypes.ToInt16(256*RGB[BackgroundCol+1].b, cback.blue);
     csource := S.VAL(PatternPtr, arrowSource);
     cmask := S.VAL(PatternPtr, arrowMask);
     arrow := CreatePixmapCursor(display, csource.pixmap, cmask.pixmap, S.ADR(cfore), S.ADR(cback), 1, 1);
